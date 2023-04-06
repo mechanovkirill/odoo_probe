@@ -74,6 +74,9 @@
                                     <field name="current_user_id"/>
                                 </group>
                             </page>
+                            <page string="Offers">
+                                <field name="offer_ids"/>
+                            </page>
                             <page string="Marks">
                                 <field name="marks"/>
                             </page>

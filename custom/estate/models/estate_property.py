@@ -35,6 +35,7 @@ class EstateProperty(models.Model):
         copy=False
     )
     marks = fields.Text(string="Marks")
-    partner_id = fields.Many2one("res.partner", string="Partner")
+    partner_id = fields.Many2one("res.partner", string="Buyer")
     property_type_id = fields.Many2one("estate.property.type", string='Type')
+    current_user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
 

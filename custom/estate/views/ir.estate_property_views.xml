@@ -68,7 +68,12 @@
                                     <field name="garden"/>
                                     <field name="garden_area" class="oe_inline"/>
                                     <field name="garden_orientation" class="oe_inline"/>
+                                </group>
+                            </page>
+                            <page string="Other info">
+                                <group>
                                     <field name="partner_id"/>
+                                    <field name="current_user_id"/>
                                 </group>
                             </page>
                             <page string="Marks">

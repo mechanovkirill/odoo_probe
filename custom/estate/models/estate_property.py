@@ -34,4 +34,5 @@ class EstateProperty(models.Model):
         required=True,
         copy=False
     )
+    marks = fields.Text(string="Marks")
 

@@ -6,9 +6,9 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "The probe model."
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, size=50)
     description = fields.Text()
-    postcode = fields.Char()
+    postcode = fields.Char(size=14)
     date_availability = fields.Date(
         string='Availability Date', copy=False,
         default=lambda self: date.today() + timedelta(days=90)
@@ -35,4 +35,6 @@ class EstateProperty(models.Model):
         copy=False
     )
     marks = fields.Text(string="Marks")
+    partner_id = fields.Many2one("res.partner", string="Partner")
+    property_type_id = fields.Many2one("estate.property.type", string='Type')
 

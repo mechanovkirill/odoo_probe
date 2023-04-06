@@ -1,12 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="test_menu_root" name="Estate menu"/>
+    <menuitem
+            id="test_menu_root"
+            name="Estate main menu"
+    />
 
-    <menuitem id="test_first_level_menu" name="First Level" parent="test_menu_root"/>
+    <menuitem
+            id="test_first_level_menu"
+            name="Estate"
+            parent="test_menu_root"
+    />
 
     <menuitem
             id="test_model_menu_action"
             action="test_model_action"
             parent="test_first_level_menu"
-            sequence="13"/>
+            sequence="1"
+    />
+
+    <menuitem
+            id="test_model_menu_settings"
+            name="Settings"
+            parent="test_menu_root"
+    />
+
+    <menuitem
+            id="test_model_menu_type_action"
+            action="estate_type_action"
+            parent="test_model_menu_settings"
+            sequence="1"
+    />
+
+
 </odoo>

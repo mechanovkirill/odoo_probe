@@ -1,5 +1,6 @@
 from datetime import timedelta, date
-from odoo import models, fields, api
+from odoo import models, fields, api, _, exceptions
+from typing import Iterable
 
 
 class EstateProperty(models.Model):
@@ -45,27 +46,48 @@ class EstateProperty(models.Model):
     best_price = fields.Float(compute='_compute_best_offers_price', string='Best Offer')
 
     @api.depends('living_area', 'garden_area')
-    def _compute_total_area(self):
+    def _compute_total_area(self: Iterable) -> None:
         for record in self:
             record.total_area = record.living_area + record.garden_area
 
     @api.depends('offer_ids.price')
-    def _compute_best_offers_price(self):
+    def _compute_best_offers_price(self: Iterable) -> None:
         for record in self:
             if record.offer_ids:
                 record.best_price = max(record.offer_ids.mapped('price'))
             else:
                 record.best_price = 0
 
-    # @api.depends('offer_ids.price')
-    # def _compute_best_offers_price(self):
-    #     for record in self:
-    #         max_ = 0
-    #         if len(record.offer_ids) > 0:
-    #             for i in range(len(record.offer_ids)):
-    #                 if i == 0:
-    #                     max_ = record.offer_ids[i].price
-    #                     continue
-    #                 if record.offer_ids[i].price > max_:
-    #                     max_ = record.offer_ids[i].price
-    #         record.best_price = max_
+    @api.onchange("garden")
+    def _onchange_garden(self: api.model) -> None:
+        if self.garden:
+            self.garden_area = 10
+            self.garden_orientation = 'north'
+        else:
+            self.garden_area = None
+            self.garden_orientation = None
+
+    # for are privet methods return warning
+    @api.onchange('garage')
+    def _onchange_garage(self: api.model) -> dict:
+        if self.garage:
+            return {'warning': {
+                'title': _("Info"),  # Instead _("Info") can use _("Warning")
+                'message': 'You are clicked on the garage checkbox.'}}
+
+    def action_sold_estate(self: Iterable) -> bool:
+        for record in self:
+            if record.state != 'canceled':
+                record.state = "sold"
+            else:
+                raise exceptions.UserError("It is not allowed to sale the canceled property.")
+        return True
+
+    # for are public methods are exceptions?
+    def action_cancel_estate(self: Iterable) -> bool:
+        for record in self:
+            if record.state != 'sold':
+                record.state = "canceled"
+            else:
+                raise exceptions.UserError("It is not possible to cancel the sold property.")
+        return True

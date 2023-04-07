@@ -1,4 +1,6 @@
-from odoo import models, fields
+from odoo import models, fields, api
+from datetime import date, timedelta
+from typing import Iterable
 
 
 class EstateOffer(models.Model):
@@ -13,3 +15,17 @@ class EstateOffer(models.Model):
     )
     partner_id = fields.Many2one("res.partner", string="Partner", required=True)
     property_id = fields.Many2one("estate.property", required=True)
+
+    validity = fields.Integer(default=7)
+    date_deadline = fields.Date(compute='_compute_date_deadline', inverse='_inverse_validity')
+
+    @api.depends('validity', 'create_date')
+    def _compute_date_deadline(self: Iterable) -> None:
+        for record in self:
+            record.date_deadline = record.create_date + timedelta(days=record.validity) if record.create_date \
+                else date.today() + timedelta(days=record.validity)
+
+    def _inverse_validity(self: Iterable) -> None:
+        for record in self:
+            time_delta = record.date_deadline - date.today()
+            record.validity = time_delta.days

@@ -1,5 +1,5 @@
 from datetime import timedelta, date
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class EstateProperty(models.Model):
@@ -40,3 +40,32 @@ class EstateProperty(models.Model):
     current_user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
     tag_ids = fields.Many2many('estate.property.tag')
     offer_ids = fields.One2many(comodel_name="estate.property.offer", inverse_name="property_id")
+
+    total_area = fields.Float(compute='_compute_total_area')
+    best_price = fields.Float(compute='_compute_best_offers_price', string='Best Offer')
+
+    @api.depends('living_area', 'garden_area')
+    def _compute_total_area(self):
+        for record in self:
+            record.total_area = record.living_area + record.garden_area
+
+    @api.depends('offer_ids.price')
+    def _compute_best_offers_price(self):
+        for record in self:
+            if record.offer_ids:
+                record.best_price = max(record.offer_ids.mapped('price'))
+            else:
+                record.best_price = 0
+
+    # @api.depends('offer_ids.price')
+    # def _compute_best_offers_price(self):
+    #     for record in self:
+    #         max_ = 0
+    #         if len(record.offer_ids) > 0:
+    #             for i in range(len(record.offer_ids)):
+    #                 if i == 0:
+    #                     max_ = record.offer_ids[i].price
+    #                     continue
+    #                 if record.offer_ids[i].price > max_:
+    #                     max_ = record.offer_ids[i].price
+    #         record.best_price = max_

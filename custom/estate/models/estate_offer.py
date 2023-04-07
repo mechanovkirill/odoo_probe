@@ -29,3 +29,15 @@ class EstateOffer(models.Model):
         for record in self:
             time_delta = record.date_deadline - date.today()
             record.validity = time_delta.days
+
+    def action_accept_property(self: Iterable) -> bool:
+        for record in self:
+            record.status = "accepted"
+            record.property_id.selling_price = record.price
+            record.property_id.partner_id = record.partner_id
+        return True
+
+    def action_refuse_property(self: Iterable) -> bool:
+        for record in self:
+            record.status = "refused"
+        return True

@@ -56,3 +56,11 @@ class EstateOffer(models.Model):
         for record in self:
             if record.date_deadline < date.today():
                 raise ValidationError("The end date cannot be set in the past")
+
+    @api.model
+    def create(self, vals_list: dict) -> models.Model:
+        offer = super().create(vals_list)
+        property_state = offer.property_id.state
+        if property_state == 'new':
+            offer.property_id.state = 'offer_received'
+        return offer

@@ -7,6 +7,7 @@ from typing import Iterable
 class EstateOffer(models.Model):
     _name = 'estate.property.offer'
     _description = 'Estate offers'
+    _order = 'price desc'
 
     price = fields.Float()
     status = fields.Selection(
@@ -51,7 +52,7 @@ class EstateOffer(models.Model):
     ]
 
     @api.constrains('date_deadline')
-    def _check_date_end(self):
+    def _check_date_end(self: Iterable) -> None:
         for record in self:
             if record.date_deadline < date.today():
                 raise ValidationError("The end date cannot be set in the past")

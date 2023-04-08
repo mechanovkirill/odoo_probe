@@ -2,12 +2,12 @@ from datetime import timedelta, date
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 from typing import Iterable
-from odoo.tools import float_utils
 
 
 class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "The probe model."
+    _order = 'id desc'
 
     name = fields.Char(required=True, size=50)
     description = fields.Text()

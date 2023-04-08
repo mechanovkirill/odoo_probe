@@ -1,6 +1,8 @@
 from datetime import timedelta, date
-from odoo import models, fields, api, _, exceptions
+from odoo import models, fields, api, _
+from odoo.exceptions import ValidationError, UserError
 from typing import Iterable
+from odoo.tools import float_utils
 
 
 class EstateProperty(models.Model):
@@ -81,7 +83,7 @@ class EstateProperty(models.Model):
             if record.state != 'canceled':
                 record.state = "sold"
             else:
-                raise exceptions.UserError("It is not allowed to sale the canceled property.")
+                raise UserError("It is not allowed to sale the canceled property.")
         return True
 
     # for are public methods are exceptions?
@@ -90,11 +92,17 @@ class EstateProperty(models.Model):
             if record.state != 'sold':
                 record.state = "canceled"
             else:
-                raise exceptions.UserError("It is not possible to cancel the sold property.")
+                raise UserError("It is not possible to cancel the sold property.")
         return True
 
     _sql_constraints = [
         ('check_expected_price', 'CHECK(expected_price > 0)', 'The expected price must be greater than 0.'),
-        ('check_selling_price', 'CHECK(selling_price > 0)', 'The selling price must be greater than 0.'),
     ]
 
+    @api.constrains('expected_price', 'selling_price')
+    def _check_price(self: Iterable) -> None:
+        for record in self:
+            if record.selling_price:
+                res = record.selling_price * 100 / record.expected_price
+                if res < 90:
+                    raise ValidationError("Selling price can't be less than 90% of expected price.")

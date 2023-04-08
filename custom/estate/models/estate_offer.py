@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 from datetime import date, timedelta
 from typing import Iterable
 
@@ -30,18 +31,26 @@ class EstateOffer(models.Model):
             time_delta = record.date_deadline - date.today()
             record.validity = time_delta.days
 
-    def action_accept_property(self: Iterable) -> bool:
+    def action_accept_offer(self: Iterable) -> bool:
         for record in self:
             record.status = "accepted"
             record.property_id.selling_price = record.price
             record.property_id.partner_id = record.partner_id
         return True
 
-    def action_refuse_property(self: Iterable) -> bool:
+    def action_refuse_offer(self: Iterable) -> bool:
         for record in self:
             record.status = "refused"
+            record.property_id.selling_price = None
+            record.property_id.partner_id = None
         return True
 
     _sql_constraints = [
         ('check_price', 'CHECK(price > 0)', 'The price must be greater than 0.'),
     ]
+
+    @api.constrains('date_deadline')
+    def _check_date_end(self):
+        for record in self:
+            if record.date_deadline < date.today():
+                raise ValidationError("The end date cannot be set in the past")

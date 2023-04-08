@@ -38,8 +38,9 @@
         <field name="arch" type="xml">
             <form string="Estate property form string">
                 <header>
-                     <button name="action_sold_estate" type="object" string="Sold" class="btn btn-success"/>
-                     <button name="action_cancel_estate" type="object" string="Cancel" class="oe_highlight"/>
+                    <button name="action_sold_estate" type="object" string="Sold" class="oe_highlight"/>
+                    <button name="action_cancel_estate" type="object" string="Cancel"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,offer_received,offer_accepted,sold"/>
                 </header>
                 <sheet>
                     <field name="name" class="oe_inline" style="font-size:200%; margin-bottom:10px"/>

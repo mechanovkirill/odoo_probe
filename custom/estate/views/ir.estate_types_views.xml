@@ -11,11 +11,20 @@
         <field name="name">estate.property.type.form</field>
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
-            <form string="Estate property form string">
+            <form string="Estate type">
                 <sheet>
-                    <h1>
-                        <field name="name"/>
-                    </h1>
+                    <field name="name" class="oe_inline" style="font-size:200%; margin-bottom:10px"/>
+                    <notebook>
+                        <page string="Properties">
+                            <field name="properties_ids">
+                                <tree>
+                                    <field name="name" string="Title"/>
+                                    <field name="expected_price"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

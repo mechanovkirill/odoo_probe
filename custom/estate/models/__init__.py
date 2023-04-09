@@ -3,4 +3,4 @@ from . import \
     estate_type, \
     estate_tag, \
     estate_offer, \
-    inherited_model
+    inherited_res_users_model

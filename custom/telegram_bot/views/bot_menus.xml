@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+            id="bot_menu_root"
+            name="Telegram bot"
+    />
+
+    <menuitem
+            id="test_first_level_menu"
+            name="Bot"
+            parent="bot_menu_root"
+    />
+
+    <menuitem
+            id="bot_menu_action"
+            action="bot_action"
+            parent="test_first_level_menu"
+    />
+
+</odoo>

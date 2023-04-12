@@ -7,7 +7,7 @@
 
     <menuitem
             id="test_first_level_menu"
-            name="Bot"
+            name="Bot settings"
             parent="bot_menu_root"
     />
 

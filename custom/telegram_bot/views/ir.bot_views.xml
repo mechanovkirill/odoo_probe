@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="bot_action" model="ir.actions.act_window">
-        <field name="name">Bot</field>
+        <field name="name">Settings</field>
         <field name="res_model">telegram.bot</field>
         <field name="view_mode">tree,form</field>
     </record>
@@ -13,10 +13,26 @@
         <field name="arch" type="xml">
             <form string="Bot form string">
                 <header>
-                    <button name="action_start_bot" type="object" string="Run bot" class="oe_highlight"/>
+                    <button name="action_set_webhook_domain" type="object" string="Set webhook" class="oe_highlight"/>
                 </header>
-
+                <sheet>
+                    <group>
+                        <field name="bot_token"/>
+                        <field name="webhook_url_domain"/>
+                    </group>
+                </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="test_model_view_tree" model="ir.ui.view">
+        <field name="name">telegram.bot.tree</field>
+        <field name="model">telegram.bot</field>
+        <field name="arch" type="xml">
+            <tree string="Telegram bot settings">
+                <field name="webhook_url_domain"/>
+                <field name="bot_token"/>
+            </tree>
         </field>
     </record>
 

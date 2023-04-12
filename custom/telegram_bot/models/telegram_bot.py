@@ -1,12 +1,15 @@
-from odoo import fields, models, api, http
+from odoo import fields, models, api
+from odoo.exceptions import UserError
+import requests
+
 
 
 class Bot(models.Model):
     _name = 'telegram.bot'
     _description = 'Telegram bot model'
 
-    webhook_url_domain = fields.Char(required=True)
-    bot_token = fields.Char(required=True)
+    webhook_url_domain = fields.Char(help='bla bla')
+    bot_token = fields.Char(help='bla bla')
 
     # @api.model
     # def create(self, vals_list: dict) -> models.Model:
@@ -15,13 +18,24 @@ class Bot(models.Model):
     #     if property_state == 'new':
     #         offer.property_id.state = 'offer_received'
     #     return offer
+    # if self.env['account.journal'].search([], order='id desc', limit=1):
+    #     print('**' * 100)
+    #     print(True)
 
     #  GET https://api.telegram.org/bot{my_bot_token}/setWebhook?url={url_to_send_updates_to}
-    def action_set_webhook_domain(self: models.Model) -> bool:
+    def action_set_webhook_domain(self: models.Model) -> requests.get:
+        domain = None
+        token = None
+        for record in self:
+            print(record)
+            domain = record.webhook_url_domain
+            token = record.bot_token
 
-        return True
+        base_url = f"https://api.telegram.org/bot{token}/setWebhook?url={domain}/telegram/webhook"
 
-    # code = self.env['account.journal'].search([], order='id desc', limit=1).code
-    # https://api.telegram.org/bot5849516026:AAHFhxviC8_juSNqkTwvLwjMmZlCqGelRFY/setWebhook?url=057b-91-151-136-186.ngrok-free.app/telegram/webhook
+        if domain and token:
+            return requests.get(url=base_url)
+        else:
+            raise UserError("Telegram bot domain and/or token missing.")
 
 

@@ -1,7 +1,7 @@
 {
     'name': "Telegram bot",
     'version': '1.0',
-    'depends': ['base'],
+    'depends': ['base', 'product'],
     'data': [
         'security/ir.model.access.csv',
         'views/ir.bot_views.xml',

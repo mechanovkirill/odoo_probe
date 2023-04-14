@@ -10,6 +10,7 @@
         'views/ir.estate_offers_views.xml',
         'views/ir.estate_property_views.xml',
         'views/estate_menus.xml',
+        'data/estate.property.type.csv',
     ],
     'application': True,
     'license': 'LGPL-3',
